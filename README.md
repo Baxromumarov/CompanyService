@@ -56,3 +56,19 @@ Clone the repository to your local machine:
 ```bash
 git clone https://github.com/baxromumarov/CompanyService.git
 cd CompanyService
+
+### 2. Run service
+First make sure service docker compose files is correctly configured. 
+Thing that should be taken into account: 
+> credentials
+> ports (just changing outer port is enough the inner ports can remain the same)
+
+Run the service with the following code
+```
+docker compose up -d --build
+```
+
+5. Stop service
+```
+docker compose down
+```
