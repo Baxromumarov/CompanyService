@@ -1,15 +1,15 @@
-# eld_go_company_service
+# Company service
 
 
 
 # running in local 
 1. Create docker network
 ```
-docker network create eld-network
+docker network create company-network
 ```
 
 2. Run database 
-The database can be run using the this [repo](https://gitlab.udevs.io/eld/local_environment).
+ 
 
 3. Create your database 
 ```
@@ -36,16 +36,23 @@ docker compose up -d --build
 docker compose down
 ```
 
+# CompanyService
 
-# Needed doc's
-- [db diagram](https://dbdiagram.io/d/eld_company_service-65421e367d8bbd646543b45d)
-- []
+This project is a Go-based microservice connected to a PostgreSQL database, built and deployed using Docker and Docker Compose.
 
+## Prerequisites
 
+Before you start, ensure you have the following installed on your machine:
 
- 1. Bug fixes 
- List:
-  1. Units:
-   >export :back ⚠️ 
- 3. Drivers: 
-   > export :back :front 
+- [Docker](https://www.docker.com/get-started) - To build and run containers
+- [Docker Compose](https://docs.docker.com/compose/) - To manage multi-container Docker applications
+
+## Project Setup
+
+### 1. Clone the Repository
+
+Clone the repository to your local machine:
+
+```bash
+git clone https://github.com/baxromumarov/CompanyService.git
+cd CompanyService

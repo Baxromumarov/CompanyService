@@ -1,18 +1,6 @@
 version: '3.8'
 
 services:
-  company-service:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
-    environment:
-        - DATABASE_URL=postgres://postgres:password@db:5432/company_service?sslmode=disable
-    depends_on:
-      - db
-    networks:
-      - company-network
 
   db:
     image: postgres:17.0
@@ -32,6 +20,18 @@ services:
       retries: 5
       start_period: 30s
       timeout: 10s
+  company-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+        - DATABASE_URL=postgres://postgres:password@db:5432/company_service?sslmode=disable
+    depends_on:
+      - db
+    networks:
+      - company-network
 
 networks:
   company-network:
