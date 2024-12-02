@@ -1,12 +1,11 @@
 package v1
 
 import (
-	"fmt"
-
 	"github.com/baxromumarov/CompanyService/config"
 	"github.com/baxromumarov/CompanyService/models"
 	"github.com/baxromumarov/CompanyService/pkg/helper"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func (h *handlerV1) CreateCompany(c *gin.Context) {
@@ -26,7 +25,10 @@ func (h *handlerV1) CreateCompany(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("company: ", company)
+	if helper.IsValidUUID(company.ID) {
+		company.ID = uuid.NewString()
+	}
+
 	if err := h.storagePostgres.Company().Create(c, company); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return

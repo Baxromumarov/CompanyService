@@ -1,17 +1,6 @@
 version: '3.8'
 
 services:
-  migrate:
-    image: migrate/migrate
-    volumes:
-      - ./migrations:/migrations
-    command: 
-      ["-path", "/migrations", "-database", "postgres://postgres:password@db:5432/company_service?sslmode=disable", "up"]
-    depends_on:
-      - db
-    networks:
-      - company-network
-
   company-service:
     build:
       context: .
@@ -38,7 +27,7 @@ services:
     networks:
       - company-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d company_service"]
+      test: ["CMD-SHELL", "until pg_isready -U postgres -d company_service; do sleep 2; done"]
       interval: 10s
       retries: 5
       start_period: 30s

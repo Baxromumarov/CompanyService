@@ -5,7 +5,6 @@ import (
 
 	"github.com/baxromumarov/CompanyService/models"
 	"github.com/baxromumarov/CompanyService/pkg/logger"
-	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -22,7 +21,7 @@ func NewCompanyRepo(db *sqlx.DB, log logger.Logger) CompanyRepo {
 }
 
 func (c *company) Create(ctx context.Context, req *models.Company) error {
-	req.ID = uuid.New().String()
+
 	_, err := c.db.Exec(`
     		INSERT INTO companies 
     		(id, name, description, amount_of_employees, registered, type)
@@ -38,6 +37,7 @@ func (c *company) Create(ctx context.Context, req *models.Company) error {
 		c.log.Error("error while creating company: " + err.Error())
 		return err
 	}
+
 	return nil
 }
 
