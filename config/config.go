@@ -9,18 +9,15 @@ import (
 )
 
 type Config struct {
-	Environment             string // develop, staging, production
-	RPCPort                 string
-
-	PostgresHost            string
-	PostgresPort            int
-	PostgresDatabase        string
-	PostgresUser            string
-	PostgresPassword        string
-
-	AuthServiceHost         string
-	AuthServicePort         int
-
+	Environment      string // develop, staging, production
+	HttpPort         string
+	LogLevel         string
+	PostgresHost     string
+	PostgresPort     int
+	PostgresDatabase string
+	PostgresUser     string
+	PostgresPassword string
+	JWTSigningKey    string
 }
 
 func Load() *Config {
@@ -33,16 +30,16 @@ func Load() *Config {
 	}
 
 	c.Environment = cast.ToString(getOrReturnDefault("ENVIRONMENT", "develop"))
-	c.RPCPort = cast.ToString(getOrReturnDefault("RPC_PORT", "8002"))
+	c.HttpPort = cast.ToString(getOrReturnDefault("HTTP_PORT", "8080"))
+	c.LogLevel = cast.ToString(getOrReturnDefault("LOG_LEVEL", "debug"))
+	c.JWTSigningKey = cast.ToString(getOrReturnDefault("JWT_SIGNING_KEY", "secret"))
 
 	c.PostgresHost = cast.ToString(getOrReturnDefault("POSTGRES_HOST", "localhost"))
 	c.PostgresPort = cast.ToInt(getOrReturnDefault("POSTGRES_PORT", 5432))
-	c.PostgresDatabase = cast.ToString(getOrReturnDefault("POSTGRES_DATABASE", "eld_go_company_service"))
+	c.PostgresDatabase = cast.ToString(getOrReturnDefault("POSTGRES_DATABASE", "company_service"))
 	c.PostgresUser = cast.ToString(getOrReturnDefault("POSTGRES_USER", "postgres"))
 	c.PostgresPassword = cast.ToString(getOrReturnDefault("POSTGRES_PASSWORD", "password"))
 
-	c.AuthServiceHost = cast.ToString(getOrReturnDefault("AUTH_SERVICE_HOST", "localhost"))
-	c.AuthServicePort = cast.ToInt(getOrReturnDefault("AUTH_SERVICE_PORT", 8080))
 	return c
 }
 

@@ -1,27 +1,20 @@
-# workspace (GOPATH) configured at /go
-FROM golang:1.20 as builder
+FROM golang:1.23-alpine AS builder
 
-#
-RUN mkdir -p $GOPATH/src/github.com/baxromumarov/golang-exercise/CompanyService
-WORKDIR $GOPATH/src/github.com/baxromumarov/golang-exercise/CompanyService
+WORKDIR /app
 
-# Copy the local package files to the container's workspace.
-COPY . ./
+COPY go.mod go.sum ./
+RUN go mod download
 
-# installing depends and build
-RUN export CGO_ENABLED=0 && \
-    export GOOS=linux && \
-    go mod vendor && \
-    make build && \
-    mv ./bin/eld_go_company_service /
+COPY . .
 
-FROM alpine
-COPY --from=builder eld_go_company_service .
-RUN mkdir config
+RUN CGO_ENABLED=0 GOOS=linux go build -o company_service ./cmd/main.go
 
-ENV ENV_FILE_PATH=/app/.env
-RUN apk add --no-cache curl
-RUN apk add --no-cache tzdata
-ENV TZ=UTC
+FROM alpine:latest
 
-ENTRYPOINT ["/eld_go_company_service"]
+WORKDIR /root/
+
+COPY --from=builder /app/company_service .
+
+EXPOSE 8080
+
+CMD ["./company_service"]

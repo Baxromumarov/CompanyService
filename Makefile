@@ -1,7 +1,7 @@
 # include .env
 CURRENT_DIR=$(shell pwd)
 
-DB_URL := "postgres://postgres:"$(POSTGRES_PASSWORD)"@localhost:5432/eld_go_company_service?sslmode=disable"
+DB_URL := "postgres://postgres:"$(POSTGRES_PASSWORD)"@localhost:5432/company_service?sslmode=disable"
 
 APP=$(shell basename ${CURRENT_DIR})
 APP_CMD_DIR=${CURRENT_DIR}/cmd
@@ -9,6 +9,11 @@ APP_CMD_DIR=${CURRENT_DIR}/cmd
 TAG=latest
 ENV_TAG=latest
 DOCKERFILE=Dockerfile
+
+run:
+	go run cmd/main.go
+linter:
+	golangci-lint run
 
 migrate-up:
 	migrate -path migrations -database "$(DB_URL)" -verbose up
@@ -22,26 +27,12 @@ migrate-file:
 migrate-force:
 	migrate -path migrations -database "$(DB_URL)" -verbose force 14
 
-proto-gen:
-	bash scripts/gen-proto.sh ${CURRENT_DIR}
-
-copy-protos:
-	rm -rf protos/* && cp -R eld_protos/* protos
-
-pull-proto-module:
-	git submodule update --init --recursive
-
-update-proto-module:
-	git submodule update --remote --merge
-
 migrate_up:
 	migrate -path migrations/ -database postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?sslmode=disable up
 	
 migrate_down:
 	migrate -path migrations/ -database postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)?sslmode=disable down
 
-rm-proto-omit-empty:
-	chmod 744 ./scripts/rm_omit_empty.sh && ./scripts/rm_omit_empty.sh ${CURRENT_DIR}
 
 build:
 	CGO_ENABLED=0 GOOS=linux go build -mod=vendor -a -installsuffix cgo -o ${CURRENT_DIR}/bin/${APP} ${APP_CMD_DIR}/main.go
